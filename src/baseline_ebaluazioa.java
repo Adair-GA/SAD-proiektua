@@ -5,6 +5,7 @@ import java.util.Date;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.LinearRegression;
+import weka.core.AttributeStats;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
@@ -25,7 +26,7 @@ public class baseline_ebaluazioa {
             Instances train = srcTrain.getDataSet();
 
             if(train.classIndex() == -1){
-                train.setClassIndex(train.numAttributes() - 1);
+                train.setClassIndex(0);
             }
 
             DataSource srcDev = new DataSource(devPath);
@@ -33,6 +34,8 @@ public class baseline_ebaluazioa {
 
             if(dev.classIndex() == -1){
                 dev.setClassIndex(dev.numAttributes() - 1);
+                dev.setClassIndex(0);
+
             }
 
             LinearRegression model = new LinearRegression();
@@ -43,6 +46,19 @@ public class baseline_ebaluazioa {
            
             Evaluation eval = new Evaluation(train);
             eval.evaluateModel(model, dev);
+            
+            //Klase minoritarioa bilatu:
+			AttributeStats stats = train.attributeStats(train.classIndex());
+			int minClassIndex = -1;
+			int minClassCount = Integer.MAX_VALUE;
+			for(int i = 0; i < stats.nominalCounts.length; i++) {
+				if(stats.nominalCounts[i] < minClassCount) {
+					minClassCount = stats.nominalCounts[i];
+					minClassIndex = i;
+				}
+			}
+
+            double fMeasureMinClass = eval.fMeasure(minClassIndex); // Klase minoritarioaren f-measure
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String exekuzioData = sdf.format(new Date());
@@ -61,6 +77,7 @@ public class baseline_ebaluazioa {
 		        writer.println("Precision: " + eval.weightedPrecision());
 		        writer.println("Recall: " + eval.weightedRecall());
 		        writer.println("F-Measure: " + eval.weightedFMeasure());
+                writer.println("Klase minoritarioaren F-Measure: "+ fMeasureMinClass);
 		        writer.println("\nEbaluazio-emaitzak amaituta.");
 			}
             System.out.println("Ebaluazio osatua. Emaitzak gorde dira hemen: " + ebaluazioaPath);
