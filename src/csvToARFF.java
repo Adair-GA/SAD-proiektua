@@ -54,7 +54,7 @@ public class csvToARFF {
 
     public static void CleanCSV(String iPath, String icPath) {
 
-        List<String> klaseHitzak = Arrays.asList("\"Sentiment\"","\"negative\"", "\"positive\"", "\"neutral\"", "\"irrelevant\"");
+        List<String> klaseHitzak = Arrays.asList("\"Sentiment\"","\"negative\"", "\"positive\"", "\"neutral\"", "\"irrelevant\"", "\"UNKNOWN\"");
 
         try (BufferedReader br = new BufferedReader(new FileReader(iPath));
              BufferedWriter bw = new BufferedWriter(new FileWriter(icPath))) {
@@ -68,6 +68,9 @@ public class csvToARFF {
                     for (int i = 0; i < parts.length; i++){
                         if (klaseHitzak.contains(parts[i])){
                             lerroa = parts[i];
+                            if (lerroa.contains("\"UNKNOWN\"")){
+                                lerroa = lerroa.replace("\"UNKNOWN\"", "?");
+                            }
                             lerroa = lerroa + "," + parts[i+3];
                             for (int j = i+4; j < parts.length; j++){
                                 lerroa = lerroa + " " + parts[j];
