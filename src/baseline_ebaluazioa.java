@@ -26,7 +26,7 @@ public class baseline_ebaluazioa {
             Instances train = srcTrain.getDataSet();
 
             if(train.classIndex() == -1){
-                train.setClassIndex(train.numAttributes() - 1);
+                train.setClassIndex(0);
             }
 
             DataSource srcDev = new DataSource(devPath);
@@ -34,6 +34,8 @@ public class baseline_ebaluazioa {
 
             if(dev.classIndex() == -1){
                 dev.setClassIndex(dev.numAttributes() - 1);
+                dev.setClassIndex(0);
+
             }
 
             LinearRegression model = new LinearRegression();
