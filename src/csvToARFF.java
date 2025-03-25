@@ -27,10 +27,7 @@ public class csvToARFF {
 
         PrintWriter writer = new PrintWriter(oPath);
         writer.print("@RELATION tweetSentiment\n\n");
-        writer.print("@attribute Topic string\n" + 
-                        "@attribute Sentiment {positive, neutral, negative, irrelevant}\n" + 
-                        "@attribute TweetId string\n" + 
-                        "@attribute TweetDate string\n" + 
+        writer.print("@attribute Sentiment {positive, neutral, negative, irrelevant}\n" + 
                         "@attribute TweetText string\n");
         writer.print("\n@data\n");
 
@@ -47,9 +44,6 @@ public class csvToARFF {
         loader.setFile(new File(oPath));
         Instances data = loader.getDataSet();
 
-        data.deleteAttributeAt(3);
-        data.deleteAttributeAt(2);
-        data.deleteAttributeAt(0);
         data.setClassIndex(0);
 
         ArffSaver saver = new ArffSaver();
@@ -60,36 +54,27 @@ public class csvToARFF {
 
     public static void CleanCSV(String iPath, String icPath) {
 
-        List<String> hasieraHitzak = Arrays.asList("Topic","google", "microsoft", "twitter", "apple");
+        List<String> klaseHitzak = Arrays.asList("\"Sentiment\"","\"negative\"", "\"positive\"", "\"neutral\"", "\"irrelevant\"");
 
         try (BufferedReader br = new BufferedReader(new FileReader(iPath));
              BufferedWriter bw = new BufferedWriter(new FileWriter(icPath))) {
             
             String line;
             while ((line = br.readLine()) != null) {
-                // Eliminar comillas dobles, dentro de un string de csv se representan con dos comillas dobles
-                line = line.replace("\"\"", ""); 
-
-                String firstWord = "";
-                // Usa epacio como split tambien, porque a veces la estructura esta tan mal que no hay comas
-                String[] parts = line.split("[ ,]"); 
-                if (parts.length > 4) {
-                     // Mira la primera palabra, si no esta en la lista de palabras la estructura de la linea no esta del todo bien
-                    firstWord = parts[0].replace("\"", "").trim(); 
-                    if (hasieraHitzak.contains(firstWord)) {
-                        // Si la primera palabra es Topic, eso es que esta leyendo la linea de headers, 
-                        // le quito las comillas porque creo que a weka no le gustan
-                        if (firstWord.equals("Topic")) { 
-                            line = line.replace("\"", "");
+                line = line.replace("\"\"", "");
+                String[] parts = line.split(",");
+                String lerroa;
+                if (parts.length > 1){
+                    for (int i = 0; i < parts.length; i++){
+                        if (klaseHitzak.contains(parts[i])){
+                            lerroa = parts[i];
+                            lerroa = lerroa + "," + parts[i+3];
+                            for (int j = i+4; j < parts.length; j++){
+                                lerroa = lerroa + " " + parts[j];
+                            }
+                            bw.write(lerroa);
+                            bw.newLine();
                         }
-                        
-                        // test_blind tiene UNKNOWN para missingClass, peroa weka no le gusta, asi que lo cambio por ?, que si lo pilla automaticamente
-                        if (parts.length > 1 && parts[1].equals("\"UNKNOWN\"")) {
-                            parts[1] = "?"; // Reemplaza UNKNOWN con ?
-                        }
-                        line = String.join(",", parts);
-                        bw.write(line);
-                        bw.newLine();
                     }
                 }
             }
