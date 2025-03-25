@@ -4,12 +4,11 @@ import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class arffToBoW {
     public static void main(String[] args) {
-        /* 
+        
         if (args.length < 3) {
             System.out.println("Erabilpena: java -jar arffToBoW.jar <train.arff> <dev.arff> <test_blind.arff> <hiztegia.arff>");
             System.exit(1);
@@ -19,11 +18,6 @@ public class arffToBoW {
         String devPath = args[1];
         String testPath = args[2];
         String hiztegiaPath = args[3];
-        */
-
-        String trainPath = "C:/Users/User/Documents/uni/3/EHES/Proiektua/train.arff";
-        String devPath = "C:/Users/User/Documents/uni/3/EHES/Proiektua/dev.arff";
-        String testPath = "C:/Users/User/Documents/uni/3/EHES/Proiektua/test_blind.arff";
         
         Instances train = datuakKargatu(trainPath);
         Instances dev = datuakKargatu(devPath);
