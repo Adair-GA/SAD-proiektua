@@ -12,8 +12,8 @@ import weka.core.converters.ConverterUtils.DataSource;
 
 public class baseline_ebaluazioa {
     public static void main(String[] args){
-        if(args.length < 4){
-            System.out.println("java -jar baseline_ebaluazioa.jar <train.arff><dev.arff><EvaluationBaseline.txt>");
+        if(args.length < 3){
+            System.out.println("java -jar baseline_ebaluazioa.jar <train.arff><dev.arff><Baseline.model><EvaluationBaseline.txt>");
             return;
         }
         String trainPath = args[0];
@@ -24,19 +24,11 @@ public class baseline_ebaluazioa {
         try{
             DataSource srcTrain = new DataSource(trainPath);
             Instances train = srcTrain.getDataSet();
-
-            if(train.classIndex() == -1){
-                train.setClassIndex(0);
-            }
+            train.setClassIndex(0);
 
             DataSource srcDev = new DataSource(devPath);
             Instances dev = srcDev.getDataSet();
-
-            if(dev.classIndex() == -1){
-                dev.setClassIndex(dev.numAttributes() - 1);
-                dev.setClassIndex(0);
-
-            }
+            dev.setClassIndex(0);
 
             LinearRegression model = new LinearRegression();
             model.buildClassifier(train);
