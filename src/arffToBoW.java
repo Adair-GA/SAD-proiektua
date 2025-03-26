@@ -1,9 +1,9 @@
 import java.io.File;
-
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 
 public class arffToBoW {
@@ -30,20 +30,34 @@ public class arffToBoW {
         System.out.println("Datuak kargatu dira.");
 
         StringToWordVector stwv = new StringToWordVector();
+        stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath));
 
         try {
             stwv.setInputFormat(train);
             Instances trainBoW = Filter.useFilter(train, stwv);
             System.out.println("Train BoW sortu da.");
 
-            Instances devBoW = Filter.useFilter(dev, stwv);
+            FixedDictionaryStringToWordVector fstwv = new FixedDictionaryStringToWordVector();
+            fstwv.setDictionaryFile(new File(hiztegiaPath));
+            fstwv.setInputFormat(dev);
+            Instances devBoW = Filter.useFilter(dev, fstwv);
             System.out.println("Dev BoW sortu da.");
-            Instances testBoW = Filter.useFilter(test, stwv);
-            System.out.println("Test_Blind BoW sortu da.");
+
+            fstwv.setInputFormat(test);
+            Instances testBoW = Filter.useFilter(test, fstwv);
+            System.out.println("Test_Blind BoW sortu da.\n");
+
+            if (train == null || dev == null || test == null) {
+                System.out.println("Errorea BoW sortzean.");
+                System.exit(1);
+            }
 
             saveInstances(trainBoW, trainPath);
+            System.out.println("Train BoW gordeta. \n");
             saveInstances(devBoW, devPath);
+            System.out.println("Dev BoW gordeta. \n");
             saveInstances(testBoW, testPath);
+            System.out.println("Test_Blind BoW gordeta. \n");
             
         } catch (Exception e) {
             e.printStackTrace();
