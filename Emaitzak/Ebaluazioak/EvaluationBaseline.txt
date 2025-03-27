@@ -1,5 +1,5 @@
 ==== Linear Regression ebaluazioa ====
-Exekuzio data: 2025-03-26 10:55:38
+Exekuzio data: 2025-03-27 19:31:19
 
 --- Nahasmen matrizea ---
 === Confusion Matrix ===

@@ -1,51 +1,51 @@
 import java.io.File;
+
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.StringToWordVector;
+import weka.filters.unsupervised.attribute.FixedDictionaryStringToWordVector;
 
-public class arffToBoW {
+public class arffEgokitu{
     public static void main(String[] args) {
         
-        if (args.length < 2) {
-            System.out.println("Erabilpena: java -jar arffToBoW.jar <train.arff> <hiztegia.arff>");
+        if (args.length < 2){
+            System.out.println("Erabilpena: java -jar arffEgokitu.jar <Data.arff> <hiztegia.arff>");
             System.exit(1);
         }
 
-        String trainPath = args[0];
+        String arffPath = args[0];
         String hiztegiaPath = args[1];
-        
-        Instances train = datuakKargatu(trainPath);
 
-        if (train == null) {
+        Instances data = datuakKargatu(arffPath);
+
+        if (data == null) {
             System.out.println("Datuak ezin izan dira kargatu.");
             System.exit(1);
         }
         System.out.println("Datuak kargatu dira.");
 
-        StringToWordVector stwv = new StringToWordVector();
-        stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath));
-        
+        FixedDictionaryStringToWordVector fstwv = new FixedDictionaryStringToWordVector();
+        fstwv.setDictionaryFile(new File(hiztegiaPath));
 
         try {
-            stwv.setInputFormat(train);
-            Instances trainBoW = Filter.useFilter(train, stwv);
-            System.out.println("Train BoW sortu da.");
+            fstwv.setInputFormat(data);
+            Instances dataBoW = Filter.useFilter(data, fstwv);
 
-            if (train == null) {
+            if (data == null) {
                 System.out.println("Errorea BoW sortzean.");
                 System.exit(1);
             }
+            System.out.println("BoW sortu da.");
 
-            saveInstances(trainBoW, trainPath);
-            System.out.println("Train BoW gordeta. \n");
-            
+            saveInstances(dataBoW, arffPath);
+            System.out.println("BoW gordeta. \n");
+
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
-
+        
     }
     public static Instances datuakKargatu(String path){
         try{
