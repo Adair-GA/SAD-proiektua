@@ -26,6 +26,7 @@ public class arffToBoW {
 
         StringToWordVector stwv = new StringToWordVector();
         stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath));
+        stwv.setLowerCaseTokens(true);
         
 
         try {

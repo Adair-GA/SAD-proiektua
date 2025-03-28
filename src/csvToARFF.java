@@ -71,9 +71,9 @@ public class csvToARFF {
                             if (lerroa.contains("\"UNKNOWN\"")){
                                 lerroa = lerroa.replace("\"UNKNOWN\"", "?");
                             }
-                            lerroa = lerroa + "," + parts[i+3];
+                            lerroa = lerroa + "," + parts[i+3].replaceAll("[^a-zA-Z , \"]", "");
                             for (int j = i+4; j < parts.length; j++){
-                                lerroa = lerroa + " " + parts[j];
+                                lerroa = lerroa + " " + parts[j].replaceAll("[^a-zA-Z ]", "");
                             }
                             bw.write(lerroa);
                             bw.newLine();
