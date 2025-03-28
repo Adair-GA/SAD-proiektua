@@ -4,11 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import weka.classifiers.Evaluation;
-import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.functions.Logistic;
 import weka.core.AttributeStats;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
+
 
 public class baseline_ebaluazioa {
     public static void main(String[] args){
@@ -29,8 +30,8 @@ public class baseline_ebaluazioa {
             DataSource srcDev = new DataSource(devPath);
             Instances dev = srcDev.getDataSet();
             dev.setClassIndex(0);
-
-            LinearRegression model = new LinearRegression();
+            
+            Logistic model = new Logistic() ; 
             model.buildClassifier(train);
 
             SerializationHelper.write(modelPath, model);
@@ -79,3 +80,5 @@ public class baseline_ebaluazioa {
         }
     }
 }
+
+
