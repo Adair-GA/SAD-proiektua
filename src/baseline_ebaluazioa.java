@@ -52,6 +52,7 @@ public class baseline_ebaluazioa {
 			}
 
             double recallMinClass = eval.recall(minClassIndex); // Klase minoritarioaren recall
+            double fMeasureMinClass = eval.fMeasure(minClassIndex); // Klase minoritarioaren recall
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String exekuzioData = sdf.format(new Date());
@@ -71,6 +72,8 @@ public class baseline_ebaluazioa {
 		        writer.println("Recall: " + eval.weightedRecall());
 		        writer.println("F-Measure: " + eval.weightedFMeasure());
                 writer.println("Klase minoritarioaren Recall: "+ recallMinClass);
+                writer.println("Klase minoritarioaren F-Measure: "+ fMeasureMinClass);
+
 		        writer.println("\nEbaluazio-emaitzak amaituta.");
 			}
             System.out.println("Ebaluazio osatua. Emaitzak gorde dira hemen: " + ebaluazioaPath);
