@@ -10,11 +10,10 @@ import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 
-
-public class baseline_ebaluazioa {
+public class baseline_eredua_ebaluazioa {
     public static void main(String[] args){
         if(args.length < 3){
-            System.out.println("java -jar baseline_ebaluazioa.jar <train.arff><dev.arff><Baseline.model><EvaluationBaseline.txt>");
+            System.out.println("java -jar baseline_eredua_ebaluazioa.jar <train.arff><dev.arff><Baseline.model><EvaluationBaseline.txt>");
             return;
         }
         String trainPath = args[0];
