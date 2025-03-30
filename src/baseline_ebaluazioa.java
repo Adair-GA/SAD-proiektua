@@ -23,6 +23,7 @@ public class baseline_ebaluazioa {
         String ebaluazioaPath = args[3];
 
         try{
+            double start = System.currentTimeMillis();
             DataSource srcTrain = new DataSource(trainPath);
             Instances train = srcTrain.getDataSet();
             train.setClassIndex(0);
@@ -75,6 +76,8 @@ public class baseline_ebaluazioa {
                 writer.println("Klase minoritarioaren F-Measure: "+ fMeasureMinClass);
 
 		        writer.println("\nEbaluazio-emaitzak amaituta.");
+
+                writer.println("Exekuzio denbora: " + (System.currentTimeMillis() - start) / 1000 + " segundotan.");
 			}
             System.out.println("Ebaluazio osatua. Emaitzak gorde dira hemen: " + ebaluazioaPath);
 
