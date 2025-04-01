@@ -1,7 +1,10 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.FileReader;
 
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;
@@ -34,7 +37,8 @@ public class arffToBoW {
 
         StringToWordVector stwv = new StringToWordVector();
         
-        // stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath));
+        // Hau ez da behin-behineko hiztegia, baizik eta aitrubutu hautapena egin baino lehen sortzen dena
+        stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath)); 
         stwv.setLowerCaseTokens(true);
         
         stwv.setTFTransform(true);
@@ -57,23 +61,10 @@ public class arffToBoW {
             }
             System.out.println("Atributu hautapena egin da. \n");
 
-            Instances trainHeaders = new Instances(trainBerria);
-            trainHeaders.delete(); 
-            saveInstances(trainHeaders, trainPath.replace(".arff", "_Headers.arff"));
-            System.out.println("Train Headers gordeta. \n");
-
             saveInstances(trainBerria, trainPath);
             System.out.println("Train BoW gordeta. \n");
 
-            // Temporal, funciona pero no es del todo correcto
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(hiztegiaPath))) {
-                // Recorrer todos los atributos y guardarlos como diccionario
-                for (int i = 0; i < trainBerria.numAttributes(); i++) { // Excluye la clase si es el primer atributo
-                    writer.write(trainBerria.attribute(i).name());
-                    writer.newLine();
-                }
-                System.out.println("Diccionario guardado en: " + hiztegiaPath);
-            }
+            hiztegiaEgokitu(trainBerria, hiztegiaPath);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,7 +87,7 @@ public class arffToBoW {
     }  
 
     public static void saveInstances(Instances data, String filePath) throws Exception {
-        String path = filePath.replace(".arff", "_BoW.arff");
+        String path = filePath.replace(".arff", "_as_BoW.arff");
         ArffSaver saver = new ArffSaver();
         saver.setInstances(data);
         System.out.println(path);
@@ -144,7 +135,7 @@ public class arffToBoW {
                 Instances finalData = Filter.useFilter(newData, reorder);
                 finalData.setClassIndex(finalData.numAttributes() - 1);
 
-                System.out.println("Birmoldaketa egin da, kalsea 0 posizioan dago.");
+                System.out.println("Birmoldaketa egin da, klasea 0 posizioan dago.");
                 return finalData;
             }
 
@@ -152,6 +143,46 @@ public class arffToBoW {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void hiztegiaEgokitu(Instances headers, String hiztegiaPath){
+        try{
+            Map <String, Integer> atributuHizt = new HashMap<String, Integer>();
+
+            BufferedReader br = new BufferedReader(new FileReader(hiztegiaPath));
+            BufferedWriter wr = new BufferedWriter(new FileWriter(hiztegiaPath.replace(".arff", "_egokitua.arff")));
+            String line;
+            line = br.readLine();  // Doc kopurua adierazten du
+            wr.write(line);
+            wr.newLine();
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                String atributua = parts[0];
+                Integer kop = Integer.parseInt(parts[1]);
+                atributuHizt.put(atributua, kop);
+            }
+            br.close();
+
+            for (int i = 0; i < headers.numAttributes(); i++) {
+                String atributua = headers.attribute(i).name();
+                if (atributuHizt.containsKey(atributua)) {
+                    wr.write(atributua + "," + atributuHizt.get(atributua));
+                    wr.newLine();
+                }    
+            }
+            wr.close();
+
+            File hiztegiaFile = new File(hiztegiaPath);
+            hiztegiaFile.delete(); // Lehen hiztegia ezabatu
+
+            System.out.println("Hiztegia egokitu da.");
+
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Errorea hiztegia egokitzen.");
+            System.exit(1);
         }
     }
 }
