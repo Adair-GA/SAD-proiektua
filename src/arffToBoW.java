@@ -35,7 +35,14 @@ public class arffToBoW {
         StringToWordVector stwv = new StringToWordVector();
         // stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath));
         stwv.setLowerCaseTokens(true);
+<<<<<<< HEAD
 
+=======
+        stwv.setTFTransform(true);
+        stwv.setIDFTransform(true);
+        stwv.setOutputWordCounts(true); // Dokumentuan hitzaren agerpen kopurua
+        
+>>>>>>> 7549d6f (TF-IDF)
         try {
             stwv.setInputFormat(train);
             Instances trainBoW = Filter.useFilter(train, stwv);

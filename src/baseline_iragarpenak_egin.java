@@ -17,7 +17,7 @@ public class baseline_iragarpenak_egin {
         String iragarpenakPath = args[2];
 
         try{ 
-            // Linear regression eredua kargatu:
+            // Logistic regression eredua kargatu:
         	Logistic model = (Logistic) SerializationHelper.read(modelPath);
         	
         	//test blind kargatu:

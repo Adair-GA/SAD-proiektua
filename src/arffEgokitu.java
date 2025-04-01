@@ -37,7 +37,13 @@ public class arffEgokitu{
 
         FixedDictionaryStringToWordVector fstwv = new FixedDictionaryStringToWordVector();
         fstwv.setDictionaryFile(new File(hiztegiaPath));
+<<<<<<< HEAD
         fstwv.setLowerCaseTokens(true);
+=======
+        fstwv.setTFTransform(true);
+        fstwv.setIDFTransform(true);
+        fstwv.setOutputWordCounts(true); // Dokumentuan hitzaren agerpen kopurua
+>>>>>>> 7549d6f (TF-IDF)
 
         try {
             fstwv.setInputFormat(data);
