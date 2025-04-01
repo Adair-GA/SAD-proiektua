@@ -31,18 +31,17 @@ public class baseline_iragarpenak_egin {
 
             try (PrintWriter writer = new PrintWriter(new FileWriter(iragarpenakPath))) {
             	writer.println("==== Linear Regression Iragarpenak ====");
-                
+        
                 //Instantzia bakoitza zeharkatu eta iragarpena egin:
                 for(int i = 0; i < blindData.numInstances(); i++) {
                 	double predIndex = model.classifyInstance(blindData.instance(i));
                 	String predictedClass = blindData.classAttribute().value((int) predIndex);
                 	
                 	writer.printf("Instantzia %d: Iragarpena = %s \n", i + 1, predictedClass); 
-                }
-                writer.println("Iragarpen osatuak.");
+                }   
             } 
             System.out.println("Iragarpenak gorde dira: " + iragarpenakPath);
-
+            
         }catch(Exception e){
             e.printStackTrace();
         }

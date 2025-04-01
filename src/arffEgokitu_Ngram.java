@@ -14,30 +14,37 @@ public class arffEgokitu_Ngram{
             System.exit(1);
         }
 
-        String arffPath = args[0];
-        String hiztegiaPath = args[1];
-
+        String arffPath = args[0]; // dev edo test arff fitxategia
+        String hiztegiaPath = args[1]; // n-gramen hiztegia
+        
+        // arff-tik datuak kargatu:
         Instances data = datuakKargatu(arffPath);
 
+        // Datuak kargatu diren egiaztatu:
         if (data == null) {
             System.out.println("Datuak ezin izan dira kargatu.");
             System.exit(1);
         }
         System.out.println("Datuak kargatu dira.");
 
+        // FixedDictionaryStringToWordVector sortu datuak n-grametan bihurtzeko:
         FixedDictionaryStringToWordVector fstwv = new FixedDictionaryStringToWordVector();
         fstwv.setDictionaryFile(new File(hiztegiaPath));
 
         try {
             fstwv.setInputFormat(data);
+            
+            // N-gramen filtroa datuetan aplikatu:
             Instances dataNgram = Filter.useFilter(data, fstwv);
-
+            
+            // Bihurketa arrakastatsua izan den egiaztatu:
             if (dataNgram == null) {
                 System.out.println("Errorea N-gram sortzean.");
                 System.exit(1);
             }
             System.out.println("N-gramak sortu dira.");
 
+            // N-grametan bihurtutako datuak arff fitxategi berri batean gorde:
             saveInstances(dataNgram, arffPath);
             System.out.println("N-gramak gordeta. \n");
 
@@ -62,7 +69,9 @@ public class arffEgokitu_Ngram{
     }  
 
     public static void saveInstances(Instances data, String filePath) throws Exception {
+        // N-gramen arff fitxategirako irteera path-a sortu: 
         String path = filePath.replace(".arff", "_Ngram.arff");
+        // Instantziak gorde arff-an:
         ArffSaver saver = new ArffSaver();
         saver.setInstances(data);
         System.out.println(path);
