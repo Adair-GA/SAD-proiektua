@@ -25,11 +25,13 @@ public class arffToNgram {
             System.exit(1);
         }
 
-        String trainPath = args[0];
-        String hiztegiaPath = args[1];
+        String trainPath = args[0]; // train multzoaren arff
+        String hiztegiaPath = args[1]; // hiztegia gordetzeko arff
         
+        // train-eko datuak kargatu:
         Instances train = datuakKargatu(trainPath);
 
+        // Datuak kargatu diren egiaztatu:
         if (train == null) {
             System.out.println("Datuak ezin izan dira kargatu.");
             System.exit(1);
@@ -37,20 +39,24 @@ public class arffToNgram {
         System.out.println("Datuak kargatu dira.");
         
         try {
+            // Tokenizer-a sortu testua n-grama bihurtzeko:
             NGramTokenizer tokenizer = new NGramTokenizer();
-            tokenizer.setNGramMinSize(1);
-            tokenizer.setNGramMaxSize(2);
-            tokenizer.setDelimiters(" \\W");
+            tokenizer.setNGramMinSize(1); // n-gramen gutxieneko tamaina
+            tokenizer.setNGramMaxSize(2); // n-gramen gehienezko tamaina
+            tokenizer.setDelimiters(" \\W"); // Mugatzaileak (hutsune eta karaktere ez-alfanumerikoak)
 
+            // StringToWordVector sortu instantziak n-grametan prozesatzeko:
             StringToWordVector stwv = new StringToWordVector();
-            stwv.setTokenizer(tokenizer);
-            stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath));
-            stwv.setLowerCaseTokens(true);
-            stwv.setInputFormat(train);
+            stwv.setTokenizer(tokenizer); // tokenizer-a ezarri
+            stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath)); // n-gramak gordetzeko hiztegia ezarri
+            stwv.setLowerCaseTokens(true); // token guztiak letra xehe bihutu
+            stwv.setInputFormat(train); 
 
+            // N-gramen filtroa train multzoan aplikatu:
             Instances trainNgram = Filter.useFilter(train, stwv);
             System.out.println("Bihurketa N-grametara eginda.");
 
+            // N-gram instantzietan atributu hautapena egin:
             Instances trainBerria = atributuHautapena(trainNgram);
             if (trainBerria == null) {
                 System.out.println("Errorea atributu hautapenean.");
@@ -58,6 +64,7 @@ public class arffToNgram {
             }
             System.out.println("Atributu hautapena egin da. \n");
 
+            // Instantzia berriak n-gramekin gorde arff batean:
             saveInstances(trainBerria, trainPath);
             System.out.println("Train N-gram gordeta. \n");
 
@@ -84,7 +91,9 @@ public class arffToNgram {
     }  
 
     public static void saveInstances(Instances data, String filePath) throws Exception {
+        // N-gramen arff fitxategirako irteera path-a sortu: 
         String path = filePath.replace(".arff", "_Ngram.arff");
+        // Instantziak gorde arff-an:
         ArffSaver saver = new ArffSaver();
         saver.setInstances(data);
         System.out.println(path);

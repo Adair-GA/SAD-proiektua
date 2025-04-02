@@ -13,7 +13,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 public class baseline_eredua_ebaluazioa {
     public static void main(String[] args){
         if(args.length < 3){
-            System.out.println("java -jar baseline_eredua_ebaluazioa.jar <train.arff><dev.arff><Baseline.model><EvaluationBaseline.txt>");
+            System.out.println("java -jar baseline_eredua_ebaluazioa.jar <train.arff><dev.arff><baseline.model><EvaluationBaseline.txt>");
             return;
         }
         String trainPath = args[0];
@@ -22,21 +22,27 @@ public class baseline_eredua_ebaluazioa {
         String ebaluazioaPath = args[3];
 
         try{
-            double start = System.currentTimeMillis();
+            double start = System.currentTimeMillis(); 
+            
+            // train datuak kargatu: 
             DataSource srcTrain = new DataSource(trainPath);
             Instances train = srcTrain.getDataSet();
             train.setClassIndex(0);
-
+            // dev datuak kargatu:
             DataSource srcDev = new DataSource(devPath);
             Instances dev = srcDev.getDataSet();
             dev.setClassIndex(0);
             
+            // Logistic Regression sailkatzailea sortu:
             Logistic model = new Logistic() ; 
+            // sailkatzailea entrenatu train multzoarekin:
             model.buildClassifier(train);
-
+            
+            // Eredua gorde:
             SerializationHelper.write(modelPath, model);
             System.out.println("Eredua hemen gorde da: " + modelPath);
            
+            // Ereduaren ebaluazioa egin:
             Evaluation eval = new Evaluation(train);
             eval.evaluateModel(model, dev);
             
@@ -51,9 +57,12 @@ public class baseline_eredua_ebaluazioa {
 				}
 			}
 
-            double recallMinClass = eval.recall(minClassIndex); // Klase minoritarioaren recall
-            double fMeasureMinClass = eval.fMeasure(minClassIndex); // Klase minoritarioaren recall
+            // Klase minoritarioaren recall:
+            double recallMinClass = eval.recall(minClassIndex); 
+            // Klase minoritarioaren f-Measure
+            double fMeasureMinClass = eval.fMeasure(minClassIndex); 
 
+            // Exekuzio-data lortu:
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String exekuzioData = sdf.format(new Date());
 
@@ -71,10 +80,10 @@ public class baseline_eredua_ebaluazioa {
 		        writer.println("Precision: " + eval.weightedPrecision());
 		        writer.println("Recall: " + eval.weightedRecall());
 		        writer.println("F-Measure: " + eval.weightedFMeasure());
-                writer.println("Klase minoritarioaren Recall: "+ recallMinClass);
-                writer.println("Klase minoritarioaren F-Measure: "+ fMeasureMinClass);
-
-		        writer.println("\nEbaluazio-emaitzak amaituta.");
+                
+                writer.println("\n--- Klase Minoritarioa ---");
+                writer.println("Klase min Recall: "+ recallMinClass);
+                writer.println("Klase min F-Measure: "+ fMeasureMinClass);
 
                 writer.println("Exekuzio denbora: " + (System.currentTimeMillis() - start) / 1000 + " segundotan.");
 			}
