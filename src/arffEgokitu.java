@@ -16,6 +16,11 @@ public class arffEgokitu{
         String arffPath = args[0];
         String hiztegiaPath = args[1];
 
+        egokitu(arffPath, hiztegiaPath);
+    }
+    
+    public static void egokitu(String arffPath, String hiztegiaPath) {
+
         Instances data = datuakKargatu(arffPath);
 
         if (data == null) {
@@ -43,20 +48,13 @@ public class arffEgokitu{
             }
             System.out.println("BoW sortu da.");
 
-            if (dataBoW == null) {
-                System.out.println("Errorea atributuak egokitzean.");
-                System.exit(1);
-            }
-            System.out.println("Atributuak egokitu dira. \n");
-
             saveInstances(dataBoW, arffPath);
             System.out.println("BoW gordeta. \n");
 
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
-        }
-        
+        }        
     }
     public static Instances datuakKargatu(String path){
         try{

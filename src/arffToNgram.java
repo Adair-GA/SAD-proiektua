@@ -27,6 +27,11 @@ public class arffToNgram {
 
         String trainPath = args[0]; // train multzoaren arff
         String hiztegiaPath = args[1]; // hiztegia gordetzeko arff
+
+        arffNgram(trainPath, hiztegiaPath);
+    }
+
+    public static void arffNgram(String trainPath, String hiztegiaPath) {
         
         // train-eko datuak kargatu:
         Instances train = datuakKargatu(trainPath);

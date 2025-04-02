@@ -26,6 +26,11 @@ public class arffToBoW {
 
         String trainPath = args[0];
         String hiztegiaPath = args[1];
+
+        arffBoW(trainPath, hiztegiaPath);
+    }
+
+    public static void arffBoW(String trainPath, String hiztegiaPath) {
         
         Instances train = datuakKargatu(trainPath);
 
