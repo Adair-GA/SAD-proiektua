@@ -77,7 +77,7 @@ public class arffToBoW {
         }
 
     }
-    public static Instances datuakKargatu(String path){
+    private static Instances datuakKargatu(String path){
         try{
             DataSource source = new DataSource(path);
             Instances data = source.getDataSet();
