@@ -13,7 +13,7 @@ import weka.filters.supervised.instance.Resample;
 public class eredu_optimoa_ebaluazioa {
     public static void main(String[] args) {
         if(args.length < 3){
-            System.out.println("java -jar eredu_optimoa_ebaluazioa <trainDev.arff><model><kalitate_estimazioa.txt>");
+            System.out.println("java -jar eredu_optimoa_ebaluazioa <trainDev.arff><parametroak.txt><kalitate_estimazioa.txt>");
         }
         String trainDevPath = args[0]; // train eta dev batuta dituen arff
         String modelPath = args[1]; // Entrenatutako eredua
@@ -25,6 +25,10 @@ public class eredu_optimoa_ebaluazioa {
             Instances data = src.getDataSet();
             data.setClassIndex(data.numAttributes() - 1);
 
+            // Crear un modelo y meterle los parámetro que me den
+            // de train_dev.arff hacer atributu hautapena
+            // entrenar el modelo
+            
             // DE MOMENTO: Luego SVM
             // Entrenatutako eredua kargatu:
             Classifier model = (Classifier) SerializationHelper.read(modelPath); 
@@ -43,21 +47,26 @@ public class eredu_optimoa_ebaluazioa {
 
                 // Resample ezarri train multzoa lortzeko:
                 Instances trainData = Filter.useFilter(data, resample);
+                
+                // ATRIBUTU HAUTAPENA a TRAIN, y luego a DEV
+
                 // test multzoa entrenamendu multzoan dauden instantzien osagarria da:
-                Instances testData = new Instances(data);
+                Instances devData = new Instances(data);
 
                 for(int j = 0; j < data.numInstances(); j++){
                     if(!trainData.contains(data.instance(j))){
-                        testData.add(data.instance(j));
+                        devData.add(data.instance(j));
                     }
                 }
 
                 // Eredua entrenatu train multzoarekin:
                 model.buildClassifier(trainData);
                 
+                // evaluación con train con el atributu hautapena hecho (y dev)
+                
                 // Eredua ebaluatu test multzoa erabiliz:
                 Evaluation eval = new Evaluation(trainData);
-                eval.evaluateModel(model, testData);
+                eval.evaluateModel(model, devData);
 
                 // Ereduaren zehaztasuna gorde errepikapen honetarako:
                 accuracies[i] = eval.pctCorrect();
