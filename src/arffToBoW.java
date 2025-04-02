@@ -102,7 +102,7 @@ public class arffToBoW {
         ranker.setNumToSelect(3000); 
         ranker.setThreshold(-1.7976931348623157E308); 
         // El valor minimo para que este threshold afecete a los atributos es mayor que 0.0, en ese punto se seleccionan 744 atributos
-        // Sin embargo, esto no parece que devuelva valores optimos en la ebaluacion (por lo menos con baseline), 
+        // Sin embargo, esto no parece que devuelva valores optimos en la evaluacion (por lo menos con baseline), 
         // los atributos optimos parecen estar sobre los 3000
         as.setEvaluator(eval);
         as.setSearch(ranker);
@@ -165,6 +165,7 @@ public class arffToBoW {
             }
             br.close();
 
+            // Se itera a traves de los atributos de header y no del dictionary para mantener el orden de train
             for (int i = 0; i < headers.numAttributes(); i++) {
                 String atributua = headers.attribute(i).name();
                 if (atributuHizt.containsKey(atributua)) {
