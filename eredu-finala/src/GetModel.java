@@ -5,11 +5,14 @@ import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils;
 
+import java.io.FileWriter;
+
 
 public class GetModel {
 	public static void main(String[] args) throws Exception {
-		if(args.length != 3){
-			System.out.println("Usage: java -jar GetModel.jar <input>train.arff <input>dev.arff <output>model");
+		if(args.length != 4){
+			System.out.println("Usage: java -jar GetModel.jar <input>train.arff <input>dev.arff <output>model <output>paramSet.txt");
+			return;
 		}
 		
 		ConverterUtils.DataSource ds = new ConverterUtils.DataSource(args[0]);
@@ -41,6 +44,13 @@ public class GetModel {
 		}
 
 		System.out.printf("Best kernel: %s, best exponent: %f, achieved weighted f-measure: %f", bestKernel.getClass().getSimpleName(), bestExponent, bestScore);
+
+
+		try (FileWriter fw = new FileWriter(args[3])){
+			fw.write(String.format("%s -E %f",
+					bestKernel.getClass().getCanonicalName(), bestExponent
+			));
+		}
 
 		SMO classifier = new SMO();
 		bestKernel.setOptions(new String[]{"-E", Double.toString(bestExponent)});
