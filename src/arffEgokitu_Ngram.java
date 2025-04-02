@@ -16,6 +16,11 @@ public class arffEgokitu_Ngram{
 
         String arffPath = args[0]; // dev edo test arff fitxategia
         String hiztegiaPath = args[1]; // n-gramen hiztegia
+
+        egokitu(arffPath, hiztegiaPath);
+    }
+
+    public static void egokitu(String arffPath, String hiztegiaPath) {
         
         // arff-tik datuak kargatu:
         Instances data = datuakKargatu(arffPath);
@@ -30,6 +35,7 @@ public class arffEgokitu_Ngram{
         // FixedDictionaryStringToWordVector sortu datuak n-grametan bihurtzeko:
         FixedDictionaryStringToWordVector fstwv = new FixedDictionaryStringToWordVector();
         fstwv.setDictionaryFile(new File(hiztegiaPath));
+        fstwv.setLowerCaseTokens(true);
 
         try {
             fstwv.setInputFormat(data);
