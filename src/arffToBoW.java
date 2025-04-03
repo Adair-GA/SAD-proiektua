@@ -153,35 +153,39 @@ public class arffToBoW {
 
     public static void hiztegiaEgokitu(Instances headers, String hiztegiaPath){
         try{
+            // Hiztegiaren atributuak eta haien agerpen kopurua gordetzeko mapa:
             Map <String, Integer> atributuHizt = new HashMap<String, Integer>();
-
+            // Hiztegia irakurtzeko:
             BufferedReader br = new BufferedReader(new FileReader(hiztegiaPath));
+            // Fitxategia sortu hiztegi egokitua gordetzeko:
             BufferedWriter wr = new BufferedWriter(new FileWriter(hiztegiaPath.replace(".arff", "_egokitua.arff")));
+            
             String line;
             line = br.readLine();  // Doc kopurua adierazten du
             wr.write(line);
             wr.newLine();
-
+            
+            // Hiztegia irakurri esta HashMap batean gorde:
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 String atributua = parts[0];
                 Integer kop = Integer.parseInt(parts[1]);
                 atributuHizt.put(atributua, kop);
             }
-            br.close();
+            br.close(); 
 
-            // Se itera a traves de los atributos de header y no del dictionary para mantener el orden de train
             for (int i = 0; i < headers.numAttributes(); i++) {
-                String atributua = headers.attribute(i).name();
-                if (atributuHizt.containsKey(atributua)) {
-                    wr.write(atributua + "," + atributuHizt.get(atributua));
+                String atributua = headers.attribute(i).name(); // Atributuaren izena hartu
+                if (atributuHizt.containsKey(atributua)) { // Hiztegian badago
+                    wr.write(atributua + "," + atributuHizt.get(atributua)); // Hiztegi egokituan idatzi
                     wr.newLine();
                 }    
             }
             wr.close();
 
+            // Jatorrizko hiztegiaren fitxategia ezabatu:
             File hiztegiaFile = new File(hiztegiaPath);
-            hiztegiaFile.delete(); // Lehen hiztegia ezabatu
+            hiztegiaFile.delete(); 
 
             System.out.println("Hiztegia egokitu da.");
 

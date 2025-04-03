@@ -17,22 +17,18 @@ public class iragarpenak_egin {
         String iragarpenakPath = args[2];
 
         try{ 
-            // Logistic regression eredua kargatu:
+            // Eredua kargatu:
         	Classifier model = (Classifier) SerializationHelper.read(modelPath);
         	
         	//test blind kargatu:
         	DataSource src = new DataSource(testPath);
         	Instances blindData = src.getDataSet();
-        	
-        	/*if (blindData.classIndex() == -1) {
-        		blindData.setClassIndex(blindData.numAttributes() - 1);
-            }*/
             blindData.setClassIndex(0);
 
             try (PrintWriter writer = new PrintWriter(new FileWriter(iragarpenakPath))) {
             	writer.println("==== Linear Regression Iragarpenak ====");
         
-                //Instantzia bakoitza zeharkatu eta iragarpena egin:
+                //Instantzia bakoitzaren iragarpena egin:
                 for(int i = 0; i < blindData.numInstances(); i++) {
                 	double predIndex = model.classifyInstance(blindData.instance(i));
                 	String predictedClass = blindData.classAttribute().value((int) predIndex);
