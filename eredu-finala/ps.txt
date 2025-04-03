@@ -1,1 +1,1 @@
-weka.classifiers.functions.supportVector.NormalizedPolyKernel -E 1,060000
+weka.classifiers.functions.supportVector.PolyKernel -E 1,220000

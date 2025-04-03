@@ -3,6 +3,7 @@ import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.*;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
+import weka.core.Utils;
 import weka.core.converters.ConverterUtils;
 
 import java.io.FileWriter;
@@ -23,6 +24,8 @@ public class GetModel {
 		data.setClassIndex(0);
 		test.setClassIndex(0);
 
+		int minClassIndex = Utils.minIndex(data.attributeStats(0).nominalCounts);
+
 		Kernel[] kernels = new Kernel[] {new PolyKernel(), new NormalizedPolyKernel()};
 
 		Kernel bestKernel = kernels[0];
@@ -32,7 +35,7 @@ public class GetModel {
 		for (Kernel kernel : kernels) {
 			for (int i = 0; i < 100; i= i + 2) {
 				double exponent = 1.0 + ((double) i / 100);
-				double result = evaluateModel(data, test, kernel, exponent);
+				double result = evaluateModel(data, test, kernel, exponent, minClassIndex);
 
 				System.out.printf("Kernel: %s, exponent: %f, result: %f\n", kernel.getClass().getSimpleName(), exponent,result);
 				if (result > bestScore) {
@@ -64,7 +67,7 @@ public class GetModel {
 	}
 
 
-	private static double evaluateModel(Instances train, Instances test, Kernel kernel, double exponent) throws Exception {
+	private static double evaluateModel(Instances train, Instances test, Kernel kernel, double exponent, int minClassIndex) throws Exception {
 		SMO cls = new SMO();
 
 		kernel.setOptions(new String[]{"-E", Double.toString(exponent)});
@@ -77,7 +80,7 @@ public class GetModel {
 		e.evaluateModel(cls, test);
 
 
-		return e.weightedFMeasure();
+		return e.fMeasure(minClassIndex);
 	}
 
 
