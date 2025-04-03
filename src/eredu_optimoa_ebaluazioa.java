@@ -5,13 +5,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.Kernel;
 import weka.classifiers.functions.supportVector.NormalizedPolyKernel;
 import weka.classifiers.functions.supportVector.PolyKernel;
+import weka.core.AttributeStats;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
@@ -20,7 +23,7 @@ import weka.filters.supervised.instance.Resample;
 public class eredu_optimoa_ebaluazioa {
     public static void main(String[] args) {
         if(args.length < 4){
-            System.out.println("java -jar eredu_optimoa_ebaluazioa <trainDev.arff><parametroak.txt><hiztegia.arff><kalitate_estimazioa.txt>");
+            System.out.println("java -jar eredu_optimoa_ebaluazioa <train_Dev.arff><parametroak.txt><hiztegia.arff><kalitate_estimazioa.txt>");
         }
         String trainDevPath = args[0]; // train eta dev batuta dituen arff
         String paramOptimoakPath = args[1]; // parametro optimoak gordeta dituen txt
@@ -31,7 +34,7 @@ public class eredu_optimoa_ebaluazioa {
             // train eta dev batuta dituen arff kargatu:
             DataSource src = new DataSource(trainDevPath);
             Instances data = src.getDataSet();
-            data.setClassIndex(data.numAttributes() - 1);
+            data.setClassIndex(0);
 
             BufferedReader br = new BufferedReader(new FileReader(paramOptimoakPath));
             String line = br.readLine(); 
@@ -84,7 +87,9 @@ public class eredu_optimoa_ebaluazioa {
             // SMO eredua entrenatu:
             smo.buildClassifier(trainDevData);
 
+            SerializationHelper.write("Emaitzak/Ebaluazioak/Eredu_Optimoa.model", smo);
             int repeKop = 10; // Errepikapen kopurua eredua ebaluatzeko
+            double[] recallBalioak = new double[repeKop];
             double[] accuracies = new double[repeKop]; 
             double[] fmeasures = new double[repeKop]; 
             double[] precisions = new double[repeKop]; 
@@ -94,52 +99,72 @@ public class eredu_optimoa_ebaluazioa {
             for(int i = 0; i < repeKop; i++){
                 // Stratified Hold-Out erabili:
                 Resample resample = new Resample();
-                resample.setRandomSeed(1);
+                resample.setRandomSeed(i); 
                 resample.setNoReplacement(true);
                 resample.setSampleSizePercent(70);
                 resample.setInputFormat(data);
 
                 // Resample ezarri train multzoa lortzeko:
                 Instances trainData = Filter.useFilter(data, resample);
+                trainData.setClassIndex(0);
 
                 // Atributu hautapena train:
-                String trainPath = "repeated_HO_train_" + i + ".arff";
-                String hizPath = "repeated_HO_hiztegi_" + i + ".arff";
+                String trainPath = "Ebaluazio_eredu_optimoa/repeated_HO_train_" + i + ".arff";
+                String hizPath = "Ebaluazio_eredu_optimoa/repeated_HO_hiztegi_" + i + ".arff";
                 saveInstances(trainData, trainPath);
                 arffToBoW.arffBoW(trainPath, hizPath);
                 Instances trainBoW = datuakKargatu(trainPath.replace(".arff", "_as_BoW.arff"));
 
                 // test multzoa entrenamendu multzoan dauden instantzien osagarria da:
                 Instances devData = new Instances(data);
-                
                 for(int j = 0; j < data.numInstances(); j++){
                     if(!trainData.contains(data.instance(j))){
                         devData.add(data.instance(j));
                     }
                 }
+                devData.setClassIndex(0);
 
                 // Atributu hautapena dev:
-                String devPath = "repeated_HO_dev_" + i + ".arff";
+                String devPath = "Ebaluazio_eredu_optimoa/repeated_HO_dev_" + i + ".arff";
                 saveInstances(devData, devPath);
-                arffEgokitu.egokitu(devPath, hizPath); // train-eko hiztegia
+                arffEgokitu.egokitu(devPath, hizPath.replace(".arff", "_egokitua.arff")); // train-eko hiztegia
                 Instances devBoW = datuakKargatu(devPath.replace(".arff", "_as_BoW.arff"));
 
+                // train-eko klase minoritarioa aurkitu:
+                AttributeStats stats = trainBoW.attributeStats(trainBoW.classIndex());
+                int minClassIndex = -1;
+                int minClassCount = Integer.MAX_VALUE;
+                for(int j = 0; j < stats.nominalCounts.length; j++) {
+                	if(stats.nominalCounts[j] < minClassCount) {
+                		minClassCount = stats.nominalCounts[j];
+                		minClassIndex = j;
+                	}
+                }
+                
                 // Eredua entrenatu train multzoarekin:
                 smo.buildClassifier(trainBoW);
                 
                 // Eredua ebaluatu test multzoa erabiliz:
                 Evaluation eval = new Evaluation(trainBoW);
                 eval.evaluateModel(smo, devBoW);
-
+                
+                //Klase minoritariorako Recall lortu
+    			recallBalioak[i] = eval.recall(minClassIndex);
                 // Ereduaren metrikak gorde errepikapen honetarako:
                 accuracies[i] = eval.pctCorrect();                
                 fmeasures[i] = eval.weightedFMeasure();
-                fmeasures[i] = eval.weightedPrecision();
-                fmeasures[i] = eval.weightedRecall();
+                precisions[i] = eval.weightedPrecision();
+                recalls[i] = eval.weightedRecall();
+                System.out.println(i + " Hold-Out eginda.");
             }
+
+
 
             // Errepikapenetan lortutako metriken batez bestekoa eta
             // desbiderapen estandarra kalkulatu:
+            double meanRmin = avg_kalkulatu(recallBalioak);
+            double stdevRmin = stdev_kalkulatu(recallBalioak, meanRmin);
+
             double meanA = avg_kalkulatu(accuracies);
             double stdevA = stdev_kalkulatu(accuracies, meanA);
 
@@ -154,6 +179,10 @@ public class eredu_optimoa_ebaluazioa {
 
             // Ebaluazioaren emaitzak gorde:
             try(BufferedWriter writer = new BufferedWriter(new FileWriter(estimazioaPath))){
+                writer.write("Recall Klase minoritarioa - Batez bestekoa : " + meanRmin + "\n");
+                writer.write("Recall Klase minoritarioa- Desbiderapen estandarra : " + stdevRmin + "\n");
+                writer.write("\n");
+
                 writer.write("Accuracy - Batez bestekoa : " + meanA + "\n");
                 writer.write("Accuracy - Desbiderapen estandarra : " + stdevA + "\n");
                 writer.write("\n");
