@@ -1,0 +1,5 @@
+==== Linear Regression Iragarpenak ====
+Instantzia 1: Iragarpena = irrelevant 
+Instantzia 2: Iragarpena = neutral 
+Instantzia 3: Iragarpena = positive 
+Instantzia 4: Iragarpena = irrelevant 

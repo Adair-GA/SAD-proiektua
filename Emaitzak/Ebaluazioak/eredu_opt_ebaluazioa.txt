@@ -1,0 +1,14 @@
+Recall Klase minoritarioa - Batez bestekoa : 0.48660508083140874
+Recall Klase minoritarioa- Desbiderapen estandarra : 0.019351364358904586
+
+Accuracy - Batez bestekoa : 85.49916207804645
+Accuracy - Desbiderapen estandarra : 0.2338473607096737
+
+F-Measure - Batez bestekoa : 0.8475584153571829
+F-Measure - Desbiderapen estandarra : 0.002578988544954687
+
+Precision - Batez bestekoa : 0.8669369326521357
+Precision - Desbiderapen estandarra : 0.0022086732535766375
+
+Recall - Batez bestekoa : 0.8549916207804644
+Recall - Desbiderapen estandarra : 0.002338473607096719
