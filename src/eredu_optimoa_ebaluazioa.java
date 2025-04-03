@@ -22,12 +22,14 @@ import weka.filters.supervised.instance.Resample;
 public class eredu_optimoa_ebaluazioa {
     public static void main(String[] args) {
         if(args.length < 4){
-            System.out.println("java -jar eredu_optimoa_ebaluazioa <train_dev.arff><parametro_optimoak.txt><hiztegia.arff><kalitate_estimazioa.txt>");
+            System.out.println("java -jar eredu_optimoa_ebaluazioa <train_dev.arff><parametro_optimoak.txt><hiztegia.arff><Eredu_Optimoa.model><kalitate_estimazioa.txt>");
         }
         String trainDevPath = args[0]; // train eta dev batuta dituen arff fitxategia
         String paramOptimoakPath = args[1]; // parametro optimoak gordeta dituen txt fitxategia
         String hiztegiaPath = args[2]; // output hiztegia BoW formatua sortzeko
-        String estimazioaPath = args[3]; // Kalitatea estimazioa gordeko den txt fitxategia
+        String modelPath = args[3]; // Eredu optimoa gordeko den .model fitxategia
+        String estimazioaPath = args[4]; // Kalitatea estimazioa gordeko den txt fitxategia
+
 
         try{
             // train eta dev bateratutako datuak kargatu:
@@ -89,7 +91,7 @@ public class eredu_optimoa_ebaluazioa {
             smo.buildClassifier(trainDevData);
 
             // Eredua gorde:
-            SerializationHelper.write("Emaitzak/Ebaluazioak/Eredu_Optimoa.model", smo);
+            SerializationHelper.write(modelPath, smo);
             
             int repeKop = 10; // Errepikapen kopurua eredua ebaluatzeko
             double[] recallCminBalioak = new double[repeKop]; // Klase minoritarioaren recall
