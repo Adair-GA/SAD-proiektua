@@ -16,10 +16,10 @@ public class baseline_eredua_ebaluazioa {
             System.out.println("java -jar baseline_eredua_ebaluazioa.jar <train.arff><dev.arff><baseline.model><EvaluationBaseline.txt>");
             return;
         }
-        String trainPath = args[0];
-        String devPath = args[1];
-        String modelPath = args[2];
-        String ebaluazioaPath = args[3];
+        String trainPath = args[0]; // input train (BoW eta atributu hautapena eginda) fitxategia
+        String devPath = args[1]; // input dev (BoW eta atributu hautapena eginda) fitxategia
+        String modelPath = args[2]; // Eredua gordeko den .model fitxategia
+        String ebaluazioaPath = args[3]; // Kalitatea estimazioa gordeko den txt fitxategia
 
         try{
             double start = System.currentTimeMillis(); 
@@ -48,12 +48,14 @@ public class baseline_eredua_ebaluazioa {
             
             //Klase minoritarioa bilatu:
 			AttributeStats stats = train.attributeStats(train.classIndex());
-			int minClassIndex = -1;
+			String minClassName = "";
+            int minClassIndex = -1;
 			int minClassCount = Integer.MAX_VALUE;
 			for(int i = 0; i < stats.nominalCounts.length; i++) {
 				if(stats.nominalCounts[i] < minClassCount) {
 					minClassCount = stats.nominalCounts[i];
 					minClassIndex = i;
+                    minClassName = train.classAttribute().value(i);
 				}
 			}
 
@@ -81,18 +83,16 @@ public class baseline_eredua_ebaluazioa {
 		        writer.println("Recall: " + eval.weightedRecall());
 		        writer.println("F-Measure: " + eval.weightedFMeasure());
                 
-                writer.println("\n--- Klase Minoritarioa ---");
-                writer.println("Klase min Recall: "+ recallMinClass);
-                writer.println("Klase min F-Measure: "+ fMeasureMinClass);
+                writer.println("\n--- Klase Minoritarioa: " + minClassName + " ---");
+                writer.println("Recall: "+ recallMinClass);
+                writer.println("F-Measure: "+ fMeasureMinClass);
 
                 writer.println("Exekuzio denbora: " + (System.currentTimeMillis() - start) / 1000 + " segundotan.");
 			}
-            System.out.println("Ebaluazio osatua. Emaitzak gorde dira hemen: " + ebaluazioaPath);
+            System.out.println("Ebaluazio osatua. Emaitzak gorde dira: " + ebaluazioaPath);
 
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 }
-
-

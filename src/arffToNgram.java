@@ -25,17 +25,15 @@ public class arffToNgram {
             System.exit(1);
         }
 
-        String trainPath = args[0]; // train multzoaren arff
-        String hiztegiaPath = args[1]; // hiztegia gordetzeko arff
+        String trainPath = args[0]; // input train fitxategia
+        String hiztegiaPath = args[1]; // hiztegia gordetzeko output fitxategia
 
         arffNgram(trainPath, hiztegiaPath);
     }
 
     public static void arffNgram(String trainPath, String hiztegiaPath) {
-        
         // train-eko datuak kargatu:
         Instances train = datuakKargatu(trainPath);
-
         // Datuak kargatu diren egiaztatu:
         if (train == null) {
             System.out.println("Datuak ezin izan dira kargatu.");
@@ -54,10 +52,10 @@ public class arffToNgram {
             StringToWordVector stwv = new StringToWordVector();
             stwv.setTokenizer(tokenizer); // tokenizer-a ezarri
             stwv.setDictionaryFileToSaveTo(new File(hiztegiaPath)); // n-gramak gordetzeko hiztegia ezarri
-            stwv.setLowerCaseTokens(true); // token guztiak letra xehe bihutu
+            stwv.setLowerCaseTokens(true); // token guztiak letra xehe bihurtu
             stwv.setInputFormat(train); 
 
-            // N-gramen filtroa train multzoan aplikatu:
+            // N-gramen filtroa train multzoari ezarri:
             Instances trainNgram = Filter.useFilter(train, stwv);
             System.out.println("Bihurketa N-grametara eginda.");
 
@@ -69,7 +67,7 @@ public class arffToNgram {
             }
             System.out.println("Atributu hautapena egin da. \n");
 
-            // Instantzia berriak n-gramekin gorde arff batean:
+            // Instantzia berriak n-gramekin gorde arff fitxategi batean:
             saveInstances(trainBerria, trainPath);
             System.out.println("Train N-gram gordeta. \n");
 
@@ -117,6 +115,7 @@ public class arffToNgram {
         // los atributos optimos parecen estar sobre los 3000
         as.setEvaluator(eval);
         as.setSearch(ranker);
+
         try{
             as.setInputFormat(data);
             Instances newData = Filter.useFilter(data, as);
@@ -159,34 +158,39 @@ public class arffToNgram {
 
     public static void hiztegiaEgokitu(Instances headers, String hiztegiaPath){
         try{
+            // Hiztegiaren atributuak eta haien agerpen kopurua gordetzeko mapa:
             Map <String, Integer> atributuHizt = new HashMap<String, Integer>();
-
+            // Hiztegia irakurtzeko:
             BufferedReader br = new BufferedReader(new FileReader(hiztegiaPath));
+            // Fitxategia sortu hiztegi egokitua gordetzeko:
             BufferedWriter wr = new BufferedWriter(new FileWriter(hiztegiaPath.replace(".arff", "_egokitua.arff")));
+            
             String line;
             line = br.readLine();  // Doc kopurua adierazten du
             wr.write(line);
             wr.newLine();
-
+            
+            // Hiztegia irakurri esta HashMap batean gorde:
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 String atributua = parts[0];
                 Integer kop = Integer.parseInt(parts[1]);
                 atributuHizt.put(atributua, kop);
             }
-            br.close();
+            br.close(); 
 
             for (int i = 0; i < headers.numAttributes(); i++) {
-                String atributua = headers.attribute(i).name();
-                if (atributuHizt.containsKey(atributua)) {
-                    wr.write(atributua + "," + atributuHizt.get(atributua));
+                String atributua = headers.attribute(i).name(); // Atributuaren izena hartu
+                if (atributuHizt.containsKey(atributua)) { // Hiztegian badago
+                    wr.write(atributua + "," + atributuHizt.get(atributua)); // Hiztegi egokituan idatzi
                     wr.newLine();
                 }    
             }
             wr.close();
 
+            // Jatorrizko hiztegiaren fitxategia ezabatu:
             File hiztegiaFile = new File(hiztegiaPath);
-            hiztegiaFile.delete(); // Lehen hiztegia ezabatu
+            hiztegiaFile.delete(); 
 
             System.out.println("Hiztegia egokitu da.");
 

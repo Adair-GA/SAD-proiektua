@@ -14,8 +14,8 @@ public class arffEgokitu_Ngram{
             System.exit(1);
         }
 
-        String arffPath = args[0]; // dev edo test arff fitxategia
-        String hiztegiaPath = args[1]; // n-gramen hiztegia
+        String arffPath = args[0]; // dev edo test input fitxategia
+        String hiztegiaPath = args[1]; // input n-gramen hiztegia
 
         egokitu(arffPath, hiztegiaPath);
     }

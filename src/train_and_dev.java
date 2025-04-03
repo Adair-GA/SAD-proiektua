@@ -9,9 +9,9 @@ public class train_and_dev {
             System.out.println("java -jar train_and_dev.jar <train.csv><dev.csv><train_dev.csv>");
             System.exit(1);
         }
-        String trainPath = args[0]; // train_clean.csv 
-        String devPath = args[1]; // dev_clean.csv
-        String mergedPath = args[2]; // tain_dev.csv output
+        String trainPath = args[0]; // input train fitxategia
+        String devPath = args[1]; // input dev fitxategia
+        String mergedPath = args[2]; // output train_dev fitxategia
 
         try{
             // BufferedWriter sortu train eta dev batuta idazteko:
