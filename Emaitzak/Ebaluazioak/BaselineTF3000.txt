@@ -1,0 +1,33 @@
+==== Linear Regression ebaluazioa ====
+Exekuzio data: 2025-04-03 12:15:19
+
+--- Nahasmen matrizea ---
+=== Confusion Matrix ===
+
+   a   b   c   d   <-- classified as
+   4  62   9  15 |   a = positive
+   5 327  24  78 |   b = neutral
+   0  78  20  14 |   c = negative
+   1  66   6 235 |   d = irrelevant
+
+
+--- Precision klasearen balio bakoitzeko ---
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,044    0,007    0,400      0,044    0,080      0,107    0,529     0,134     positive
+                 0,753    0,404    0,614      0,753    0,676      0,351    0,717     0,628     neutral
+                 0,179    0,047    0,339      0,179    0,234      0,176    0,631     0,260     negative
+                 0,763    0,168    0,687      0,763    0,723      0,580    0,869     0,744     irrelevant
+Weighted Avg.    0,621    0,247    0,585      0,621    0,582      0,382    0,739     0,575     
+
+
+--- Weighted Average ---
+Precision: 0.5846040177548762
+Recall: 0.6207627118644068
+F-Measure: 0.5822338521499597
+
+--- Klase Minoritarioa ---
+Klase min Recall: 0.044444444444444446
+Klase min F-Measure: 0.07999999999999999
+Exekuzio denbora: 997.578 segundotan.
