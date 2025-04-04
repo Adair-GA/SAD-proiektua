@@ -19,7 +19,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.supervised.instance.Resample;
 
-public class eredu_optimoa_ebaluazioa {
+public class eredu_optimoa_RHO_ebal {
     public static void main(String[] args) {
         if(args.length < 4){
             System.out.println("java -jar eredu_optimoa_ebaluazioa <train_dev.arff><parametro_optimoak.txt><hiztegia.arff><Eredu_Optimoa.model><kalitate_estimazioa.txt>");
