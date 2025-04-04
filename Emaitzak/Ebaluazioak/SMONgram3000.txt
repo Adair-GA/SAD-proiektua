@@ -1,33 +1,33 @@
 ==== Linear Regression ebaluazioa ====
-Exekuzio data: 2025-04-03 17:33:57
+Exekuzio data: 2025-04-04 16:24:38
 
 --- Nahasmen matrizea ---
 === Confusion Matrix ===
 
    a   b   c   d   <-- classified as
-  10  72   3   5 |   a = positive
-   8 388  14  24 |   b = neutral
-   1  75  34   2 |   c = negative
-   8  49   0 251 |   d = irrelevant
+  17  55   8  10 |   a = positive
+   7 354  14  59 |   b = neutral
+   5  64  37   6 |   c = negative
+   0  35   3 270 |   d = irrelevant
 
 
 --- Precision klasearen balio bakoitzeko ---
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0,111    0,020    0,370      0,111    0,171      0,161    0,737     0,244     positive
-                 0,894    0,384    0,664      0,894    0,762      0,523    0,757     0,645     neutral
-                 0,304    0,020    0,667      0,304    0,417      0,405    0,839     0,387     negative
-                 0,815    0,049    0,890      0,815    0,851      0,785    0,920     0,823     irrelevant
-Weighted Avg.    0,724    0,197    0,710      0,724    0,694      0,560    0,818     0,634     
+                 0,189    0,014    0,586      0,189    0,286      0,298    0,694     0,270     positive
+                 0,816    0,302    0,697      0,816    0,752      0,514    0,757     0,654     neutral
+                 0,330    0,030    0,597      0,330    0,425      0,392    0,805     0,365     negative
+                 0,877    0,118    0,783      0,877    0,827      0,739    0,898     0,743     irrelevant
+Weighted Avg.    0,718    0,182    0,702      0,718    0,693      0,552    0,803     0,612     
 
 
 --- Weighted Average ---
-Precision: 0.7102588026748474
-Recall: 0.7235169491525424
-F-Measure: 0.6938544865836452
+Precision: 0.7024087706505145
+Recall: 0.7182203389830508
+F-Measure: 0.6930497147024267
 
---- Klase Minoritarioa ---
-Klase min Recall: 0.1111111111111111
-Klase min F-Measure: 0.17094017094017092
-Exekuzio denbora: 6.616 segundotan.
+--- Klase Minoritarioa: positive ---
+Recall: 0.18888888888888888
+F-Measure: 0.2857142857142857
+Exekuzio denbora: 7.219 segundotan.
