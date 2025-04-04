@@ -121,12 +121,13 @@ public class eredu_optimoa_ebaluazioa {
                 Instances trainBoW = datuakKargatu(trainPath.replace(".arff", "_as_BoW.arff"));
 
                 // test multzoa sortu:
-                Instances devData = new Instances(data);
-                for(int j = 0; j < data.numInstances(); j++){
-                    if(!trainData.contains(data.instance(j))){
-                        devData.add(data.instance(j));
-                    }
-                }
+                Resample resample2 = new Resample();
+                resample2.setRandomSeed(1); 
+                resample2.setNoReplacement(true);
+                resample2.setInvertSelection(true);
+                resample2.setSampleSizePercent(70);
+                resample2.setInputFormat(data);
+                Instances devData = Filter.useFilter(data, resample2);
                 devData.setClassIndex(0);
 
                 // Atributu hautapena dev:
