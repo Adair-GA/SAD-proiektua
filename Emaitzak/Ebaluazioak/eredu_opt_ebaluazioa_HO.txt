@@ -1,3 +1,5 @@
+==== Eredu optimoa ebaluazioa - Hold-Out ====
+Exekuzio data: 2025-04-05 10:24:00
 
 --- Nahasmen matrizea ---
 === Confusion Matrix ===
@@ -17,11 +19,8 @@
                  0,910    0,100    0,814      0,910    0,859      0,788    0,921     0,783     irrelevant
 Weighted Avg.    0,765    0,143    0,754      0,765    0,750      0,635    0,841     0,667     
 
-Recall Klase minoritarioa: 0.36923076923076925
 
-F-Measure Klase minoritarioa: 0.47524752475247534
-
-
+--- Weighted Average ---
 Accuracy: 76.49402390438247
 
 F-Measure: 0.749810339505764
@@ -29,4 +28,11 @@ F-Measure: 0.749810339505764
 Precision: 0.753583759313331
 
 Recall: 0.7649402390438247
+
+
+--- Klase Minoritarioa: positive ---
+Recall Klase minoritarioa: 0.36923076923076925
+
+F-Measure Klase minoritarioa: 0.47524752475247534
+
 

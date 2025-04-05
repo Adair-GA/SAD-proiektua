@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
@@ -129,12 +131,15 @@ public class eredu_optimoa_HO_ebal {
 
             // train-eko klase minoritarioa aurkitu:
             AttributeStats stats = trainBoW.attributeStats(trainBoW.classIndex());
+            String minClassName = "";
             int minClassIndex = -1;
             int minClassCount = Integer.MAX_VALUE;
             for(int j = 0; j < stats.nominalCounts.length; j++) {
                 if(stats.nominalCounts[j] < minClassCount) {
                     minClassCount = stats.nominalCounts[j];
                     minClassIndex = j;
+                    minClassName = trainBoW.classAttribute().value(j);
+
                 }
             }
             
@@ -143,28 +148,33 @@ public class eredu_optimoa_HO_ebal {
             Evaluation eval = new Evaluation(trainBoW);
             eval.evaluateModel(smo, devBoW);
             
-            // Ebaluazio metrikak kalkulatu:
+            // Klase minoritarioaren metrikak:
             double recallMin = eval.recall(minClassIndex);
             double fMeasureMin = eval.fMeasure(minClassIndex);
-            double acc = eval.pctCorrect();
-            double fMeasure = eval.weightedFMeasure();
-            double precision = eval.weightedPrecision();
-            double recall = eval.weightedRecall();
+
+            // Exekuzio-data lortu:
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String exekuzioData = sdf.format(new Date());
 
             // Emaitzak gorde:
             try(PrintWriter writer = new PrintWriter(new FileWriter(estimazioaPath))){
+                writer.println("==== Eredu optimoa ebaluazioa - Hold-Out ====");
+				writer.println("Exekuzio data: " + exekuzioData);
+
                 writer.println("\n--- Nahasmen matrizea ---");
 				writer.println(eval.toMatrixString());
 		        
                 writer.println(eval.toClassDetailsString());
+		        
+                writer.println("\n--- Weighted Average ---");
+                writer.println("Accuracy: " + eval.pctCorrect() + "\n");
+                writer.println("F-Measure: " + eval.weightedFMeasure() + "\n");
+                writer.println("Precision: " + eval.weightedPrecision() + "\n");
+                writer.println("Recall: " + eval.weightedRecall() + "\n");
 
+                writer.println("\n--- Klase Minoritarioa: " + minClassName + " ---");
                 writer.println("Recall Klase minoritarioa: " + recallMin + "\n");
                 writer.println("F-Measure Klase minoritarioa: " + fMeasureMin + "\n\n");
-
-                writer.println("Accuracy: " + acc + "\n");
-                writer.println("F-Measure: " + fMeasure + "\n");
-                writer.println("Precision: " + precision + "\n");
-                writer.println("Recall: " + recall + "\n");
             }
             System.out.println("Ebaluazioa osatu da:" + estimazioaPath);
         }catch(Exception e){
