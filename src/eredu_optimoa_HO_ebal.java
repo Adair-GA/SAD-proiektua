@@ -34,6 +34,8 @@ public class eredu_optimoa_HO_ebal {
 
 
         try{
+            double start = System.currentTimeMillis(); 
+
             // train eta dev bateratutako datuak kargatu:
             DataSource src = new DataSource(trainDevPath);
             Instances data = src.getDataSet();
@@ -167,14 +169,16 @@ public class eredu_optimoa_HO_ebal {
                 writer.println(eval.toClassDetailsString());
 		        
                 writer.println("\n--- Weighted Average ---");
-                writer.println("Accuracy: " + eval.pctCorrect() + "\n");
-                writer.println("F-Measure: " + eval.weightedFMeasure() + "\n");
-                writer.println("Precision: " + eval.weightedPrecision() + "\n");
-                writer.println("Recall: " + eval.weightedRecall() + "\n");
+                writer.println("Accuracy: " + eval.pctCorrect());
+                writer.println("Precision: " + eval.weightedPrecision());
+                writer.println("Recall: " + eval.weightedRecall());
+                writer.println("F-Measure: " + eval.weightedFMeasure());
 
                 writer.println("\n--- Klase Minoritarioa: " + minClassName + " ---");
-                writer.println("Recall Klase minoritarioa: " + recallMin + "\n");
-                writer.println("F-Measure Klase minoritarioa: " + fMeasureMin + "\n\n");
+                writer.println("Recall: " + recallMin);
+                writer.println("F-Measure: " + fMeasureMin + "\n");
+                writer.println("Exekuzio denbora: " + (System.currentTimeMillis() - start) / 1000 + " segundotan.");
+
             }
             System.out.println("Ebaluazioa osatu da:" + estimazioaPath);
         }catch(Exception e){

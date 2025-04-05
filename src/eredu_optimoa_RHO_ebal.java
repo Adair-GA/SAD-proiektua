@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
+import java.util.Locale;
 
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
@@ -32,6 +34,8 @@ public class eredu_optimoa_RHO_ebal {
 
 
         try{
+            double start = System.currentTimeMillis(); 
+
             // train eta dev bateratutako datuak kargatu:
             DataSource src = new DataSource(trainDevPath);
             Instances data = src.getDataSet();
@@ -138,12 +142,14 @@ public class eredu_optimoa_RHO_ebal {
 
                 // train-eko klase minoritarioa aurkitu:
                 AttributeStats stats = trainBoW.attributeStats(trainBoW.classIndex());
+                String minClassName = "";
                 int minClassIndex = -1;
                 int minClassCount = Integer.MAX_VALUE;
                 for(int j = 0; j < stats.nominalCounts.length; j++) {
                 	if(stats.nominalCounts[j] < minClassCount) {
                 		minClassCount = stats.nominalCounts[j];
                 		minClassIndex = j;
+                        minClassName = trainBoW.classAttribute().value(j);
                 	}
                 }
                 
@@ -177,18 +183,19 @@ public class eredu_optimoa_RHO_ebal {
             double meanR = avg_kalkulatu(recalls);
             double stdevR = stdev_kalkulatu(recalls, meanR);
 
+            // Klase minoritarioaren recall balioak gorde 
+            try (PrintWriter writer = new PrintWriter(new FileWriter("Emaitzak/Ebaluazioak/recall_klase_min.csv"))) {
+                writer.println("Recall_Cmin");
+                for (int i = 0; i < repeKop; i++) {
+                    writer.printf(Locale.US, "%.6f\n", recallCminBalioak[i]);
+                }
+                System.out.println(" klase minoritarioaren recall balioak gordeta 'recall_klase_min.csv'");
+            }
+
             // Emaitzak gorde:
             try(BufferedWriter writer = new BufferedWriter(new FileWriter(estimazioaPath))){
-                writer.write("Recall Klase minoritarioa - Batez bestekoa : " + meanRmin + "\n");
-                writer.write("Recall Klase minoritarioa- Desbiderapen estandarra : " + stdevRmin + "\n");
-                writer.write("\n");
-
                 writer.write("Accuracy - Batez bestekoa : " + meanA + "\n");
                 writer.write("Accuracy - Desbiderapen estandarra : " + stdevA + "\n");
-                writer.write("\n");
-
-                writer.write("F-Measure - Batez bestekoa : " + meanF + "\n");
-                writer.write("F-Measure - Desbiderapen estandarra : " + stdevF + "\n");
                 writer.write("\n");
 
                 writer.write("Precision - Batez bestekoa : " + meanP + "\n");
@@ -197,6 +204,19 @@ public class eredu_optimoa_RHO_ebal {
 
                 writer.write("Recall - Batez bestekoa : " + meanR + "\n");
                 writer.write("Recall - Desbiderapen estandarra : " + stdevR + "\n");
+                writer.write("\n");
+
+                writer.write("---- Klase minoritarioa ----" + "\n");
+                writer.write("Recall - Batez bestekoa : " + meanRmin + "\n");
+                writer.write("Recall - Desbiderapen estandarra : " + stdevRmin + "\n");
+                writer.write("\n");
+
+                writer.write("F-Measure - Batez bestekoa : " + meanF + "\n");
+                writer.write("F-Measure - Desbiderapen estandarra : " + stdevF + "\n");
+                writer.write("\n");
+
+                writer.write("Exekuzio denbora: " + (System.currentTimeMillis() - start) / 1000 + " segundotan.");
+
             }
             System.out.println("Ebaluazioa osatu da:" + estimazioaPath);
         }catch(Exception e){
