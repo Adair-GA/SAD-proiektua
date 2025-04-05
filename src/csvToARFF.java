@@ -21,8 +21,10 @@ public class csvToARFF {
 
         String iPath = args[0];
         String oPath = args[1];
-        String icPath = iPath.replace(".csv", "_clean.csv");
+    }
 
+    public static void csvToArff(String iPath, String oPath) throws Exception {
+        String icPath = iPath.replace(".csv", "_clean.csv");
         CleanCSV(iPath, icPath);
 
         PrintWriter writer = new PrintWriter(oPath);
@@ -82,7 +84,7 @@ public class csvToARFF {
                 }
             }
             bw.close();
-            System.out.println("Archivo CSV limpiado correctamente.");
+            System.out.println("CSV fitxategia gorde da.");
 
         } catch (IOException e) {
             System.out.println("Errorea CSV fitxategian: " + e.getMessage());

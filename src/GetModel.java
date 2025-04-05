@@ -2,7 +2,6 @@ import weka.classifiers.Evaluation;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.functions.supportVector.*;
 import weka.core.Instances;
-import weka.core.SerializationHelper;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils;
 
@@ -12,12 +11,20 @@ import java.io.FileWriter;
 public class GetModel {
 	public static void main(String[] args) throws Exception {
 		if(args.length != 4){
-			System.out.println("Usage: java -jar GetModel.jar <input>train.arff <input>dev.arff <output>model <output>paramSet.txt");
+			System.out.println("Usage: java -jar GetModel.jar <input>train.arff <input>dev.arff <output>paramSet.txt");
 			return;
 		}
+
+		String trainPath = args[0]; // input train fitxategia
+		String devPath = args[1]; // input dev fitxategia
+		String paramPath = args[2]; // output param fitxategia
+
+		GetModel.getModel(trainPath, devPath, paramPath);
+	}
+	public static void getModel(String trainPath, String devPath, String paramPath) throws Exception {
 		
-		ConverterUtils.DataSource ds = new ConverterUtils.DataSource(args[0]);
-		ConverterUtils.DataSource testDs = new ConverterUtils.DataSource(args[1]);
+		ConverterUtils.DataSource ds = new ConverterUtils.DataSource(trainPath);
+		ConverterUtils.DataSource testDs = new ConverterUtils.DataSource(devPath);
 
 		Instances test = testDs.getDataSet();
 		Instances data = ds.getDataSet();
@@ -46,24 +53,14 @@ public class GetModel {
 			}
 		}
 
-		System.out.printf("Best kernel: %s, best exponent: %f, achieved weighted f-measure: %f", bestKernel.getClass().getSimpleName(), bestExponent, bestScore);
+		System.out.printf("Best kernel: %s, best exponent: %f, achieved min class f-measure: %f", bestKernel.getClass().getSimpleName(), bestExponent, bestScore);
 
 
-		try (FileWriter fw = new FileWriter(args[3])){
+		try (FileWriter fw = new FileWriter(paramPath)){
 			fw.write(String.format("%s -E %f",
 					bestKernel.getClass().getCanonicalName(), bestExponent
 			));
 		}
-
-		SMO classifier = new SMO();
-		bestKernel.setOptions(new String[]{"-E", Double.toString(bestExponent)});
-
-		classifier.setKernel(bestKernel);
-
-		classifier.buildClassifier(data);
-
-
-		SerializationHelper.write(args[2], classifier);
 	}
 
 
