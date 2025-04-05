@@ -206,13 +206,13 @@ public class eredu_optimoa_RHO_ebal {
                 writer.write("Recall - Desbiderapen estandarra : " + stdevR + "\n");
                 writer.write("\n");
 
+                writer.write("F-Measure - Batez bestekoa : " + meanF + "\n");
+                writer.write("F-Measure - Desbiderapen estandarra : " + stdevF + "\n");
+                writer.write("\n");
+
                 writer.write("---- Klase minoritarioa ----" + "\n");
                 writer.write("Recall - Batez bestekoa : " + meanRmin + "\n");
                 writer.write("Recall - Desbiderapen estandarra : " + stdevRmin + "\n");
-                writer.write("\n");
-
-                writer.write("F-Measure - Batez bestekoa : " + meanF + "\n");
-                writer.write("F-Measure - Desbiderapen estandarra : " + stdevF + "\n");
                 writer.write("\n");
 
                 writer.write("Exekuzio denbora: " + (System.currentTimeMillis() - start) / 1000 + " segundotan.");
