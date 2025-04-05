@@ -1,14 +1,17 @@
-Recall Klase minoritarioa - Batez bestekoa : 0.7926096997690532
-Recall Klase minoritarioa- Desbiderapen estandarra : 0.015451019569217307
+Accuracy - Batez bestekoa : 89.33864541832669
+Accuracy - Desbiderapen estandarra : 4.314989342934051
 
-Accuracy - Batez bestekoa : 91.26645918123054
-Accuracy - Desbiderapen estandarra : 0.2874470868049537
+Precision - Batez bestekoa : 0.8931991527432483
+Precision - Desbiderapen estandarra : 0.04687278183247916
 
-F-Measure - Batez bestekoa : 0.9115857998138596
-F-Measure - Desbiderapen estandarra : 0.0029105760839098598
+Recall - Batez bestekoa : 0.8933864541832671
+Recall - Desbiderapen estandarra : 0.043149893429340544
 
-Precision - Batez bestekoa : 0.9132455935797154
-Precision - Desbiderapen estandarra : 0.0027478425714199243
+F-Measure - Batez bestekoa : 0.8907835710056876
+F-Measure - Desbiderapen estandarra : 0.04730670058050335
 
-Recall - Batez bestekoa : 0.9126645918123055
-Recall - Desbiderapen estandarra : 0.0028744708680495407
+---- Klase minoritarioa ----
+Recall - Batez bestekoa : 0.7476923076923077
+Recall - Desbiderapen estandarra : 0.13071492084893893
+
+Exekuzio denbora: 198.435 segundotan.

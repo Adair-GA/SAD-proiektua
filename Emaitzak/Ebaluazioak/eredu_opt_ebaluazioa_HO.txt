@@ -1,0 +1,33 @@
+==== Eredu optimoa ebaluazioa - Hold-Out ====
+Exekuzio data: 2025-04-05 13:38:18
+
+--- Nahasmen matrizea ---
+=== Confusion Matrix ===
+
+   a   b   c   d   <-- classified as
+  48  56  11  15 |   a = positive
+  14 485  19  59 |   b = neutral
+   8  65  55  11 |   c = negative
+   2  34   1 372 |   d = irrelevant
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,369    0,021    0,667      0,369    0,475      0,456    0,748     0,376     positive
+                 0,841    0,229    0,758      0,841    0,797      0,610    0,804     0,711     neutral
+                 0,396    0,028    0,640      0,396    0,489      0,457    0,845     0,416     negative
+                 0,910    0,100    0,814      0,910    0,859      0,788    0,921     0,783     irrelevant
+Weighted Avg.    0,765    0,143    0,754      0,765    0,750      0,635    0,841     0,667     
+
+
+--- Weighted Average ---
+Accuracy: 76.49402390438247
+Precision: 0.753583759313331
+Recall: 0.7649402390438247
+F-Measure: 0.749810339505764
+
+--- Klase Minoritarioa: positive ---
+Recall: 0.36923076923076925
+F-Measure: 0.47524752475247534
+
+Exekuzio denbora: 70.784 segundotan.

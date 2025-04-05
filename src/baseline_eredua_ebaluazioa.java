@@ -75,7 +75,6 @@ public class baseline_eredua_ebaluazioa {
 				writer.println("\n--- Nahasmen matrizea ---");
 				writer.println(eval.toMatrixString());
 				
-				writer.println("\n--- Precision klasearen balio bakoitzeko ---");
 		        writer.println(eval.toClassDetailsString());
 
 		        writer.println("\n--- Weighted Average ---");
