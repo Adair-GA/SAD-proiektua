@@ -32,6 +32,10 @@ public class eredu_optimoa_RHO_ebal {
         String modelPath = args[3]; // Eredu optimoa gordeko den .model fitxategia
         String estimazioaPath = args[4]; // Kalitatea estimazioa gordeko den txt fitxategia
 
+        eredu_optimoa_sortu(trainDevPath, paramOptimoakPath, hiztegiaPath, modelPath, estimazioaPath);
+    
+    }
+    public static void eredu_optimoa_sortu(String trainDevPath, String paramOptimoakPath, String hiztegiaPath, String modelPath, String estimazioaPath) {
 
         try{
             double start = System.currentTimeMillis(); 

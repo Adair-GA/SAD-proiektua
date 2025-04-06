@@ -13,6 +13,10 @@ public class train_and_dev {
         String devPath = args[1]; // input dev fitxategia
         String mergedPath = args[2]; // output train_dev fitxategia
 
+        mergeTrainAndDev(trainPath, devPath, mergedPath);
+    }
+    public static void mergeTrainAndDev(String trainPath, String devPath, String mergedPath) {
+
         try{
             // BufferedWriter sortu train eta dev batuta idazteko:
             BufferedWriter writer = new BufferedWriter(new FileWriter(mergedPath));
