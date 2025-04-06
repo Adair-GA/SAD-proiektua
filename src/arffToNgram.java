@@ -110,9 +110,10 @@ public class arffToNgram {
         Ranker ranker = new Ranker();
         ranker.setNumToSelect(3000); 
         ranker.setThreshold(0.0); 
-        // El valor minimo para que este threshold afecete a los atributos es mayor que 0.0, en ese punto se seleccionan 744 atributos
-        // Sin embargo, esto no parece que devuelva valores optimos en la evaluacion (por lo menos con baseline), 
-        // los atributos optimos parecen estar sobre los 3000
+        // Threshold-ak atributuei eragiteko gutxieneko balioa 0.0 baino handiagoa da, 
+        // puntu horretan 744 atributu hautatzen dira.
+        // Hala ere, horrek ez dirudi ebaluazioan balio optimoak itzultzen dituenik (gutxienez baselinearekin)        
+        // atributu optimoak 3000 inguruan daudela dirudi
         as.setEvaluator(eval);
         as.setSearch(ranker);
 

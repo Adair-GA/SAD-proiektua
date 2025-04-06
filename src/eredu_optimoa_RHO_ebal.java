@@ -142,14 +142,12 @@ public class eredu_optimoa_RHO_ebal {
 
                 // train-eko klase minoritarioa aurkitu:
                 AttributeStats stats = trainBoW.attributeStats(trainBoW.classIndex());
-                String minClassName = "";
                 int minClassIndex = -1;
                 int minClassCount = Integer.MAX_VALUE;
                 for(int j = 0; j < stats.nominalCounts.length; j++) {
                 	if(stats.nominalCounts[j] < minClassCount) {
                 		minClassCount = stats.nominalCounts[j];
                 		minClassIndex = j;
-                        minClassName = trainBoW.classAttribute().value(j);
                 	}
                 }
                 
